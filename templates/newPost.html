@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}
+New Log
+{% endblock %}
+{% block content %}
+<h1>Create a new log</h1>
+<form method="post" action="{{ url_for('newPost') }}">
+	<p><label for="title">Title: </label><input id="title" name="title" type="text"></p>
+	<p><label for="content">Content: </label></p>
+	<p><textarea id="content" name="content" cols=80 rows=20></textarea></p>
+	<input type="submit" value="Save">
+</form>
+{% endblock %}
