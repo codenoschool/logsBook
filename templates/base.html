@@ -36,15 +36,20 @@
 					<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown01">
+						{% if current_user.username %}
+						<a class="dropdown-item" href="#">Profile</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+						{% else %}
 						<a class="dropdown-item" href="{{ url_for('signin') }}">Sign In</a>
 						<a class="dropdown-item" href="{{ url_for('signup') }}">Sign Up</a>
-						<a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+						{% endif %}
 					</div>
 					</li>
 				</ul>
 			</div>
 		</nav>
-		<div style="margin-top:2%;">
+		<div class="container" style="margin-top:2%;">
 			{{ render_messages(messages) }}
 			{% block content %}
 			{% endblock %}

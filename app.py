@@ -17,6 +17,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "signin"
+login_manager.login_message_category = "alert-primary"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -68,7 +69,7 @@ def newPost():
         new_post = Posts(title=request.form["title"], content=request.form["content"], author=current_user.username)
         db.session.add(new_post)
         db.session.commit()
-        flash("The log was created successfully.")
+        flash("The log was created successfully.", "alert-success")
         return redirect(url_for("posts"))
 
     return render_template("newPost.html")
@@ -90,7 +91,7 @@ def signup():
             new_user = Users(username=form.username.data, email=form.email.data, password=hashed_pw)
             db.session.add(new_user)
             db.session.commit()
-            flash("You've been registered successfully")
+            flash("You've been registered successfully", "alert-success")
             return redirect(url_for("signin"))
 
     return render_template("signup.html", form=form)
@@ -113,9 +114,9 @@ def signin():
 @login_required
 def logout():
     logout_user()
-    flash("You've logged out correctly.")
+    flash("You've logged out correctly.", "alert-secondary")
     
-    return redirect(url_for("index"))
+    return redirect(url_for("posts"))
 
 @app.errorhandler(400)
 def page_not_found(error):
