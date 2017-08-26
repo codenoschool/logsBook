@@ -76,25 +76,28 @@ def newPost():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    form = RegisterForm()
+    if not current_user.is_authenticated:
+        form = RegisterForm()
 
-    if form.validate_on_submit():
-        ccu = bool(Users.query.filter_by(username=form.username.data).first())
-        cee = bool(Users.query.filter_by(email=form.email.data).first())
-        
-        if ccu == True:
-            return "The username was taken by someone else. Try again with a new one."
-        elif cee == True:
-            return "A user with this email already exists. Try again with a new one."
-        else:
-            hashed_pw = generate_password_hash(form.password.data)
-            new_user = Users(username=form.username.data, email=form.email.data, password=hashed_pw)
-            db.session.add(new_user)
-            db.session.commit()
-            flash("You've been registered successfully", "alert-success")
-            return redirect(url_for("signin"))
+        if form.validate_on_submit():
+            ccu = bool(Users.query.filter_by(username=form.username.data).first())
+            cee = bool(Users.query.filter_by(email=form.email.data).first())
+            
+            if ccu == True:
+                return "The username was taken by someone else. Try again with a new one."
+            elif cee == True:
+                return "A user with this email already exists. Try again with a new one."
+            else:
+                hashed_pw = generate_password_hash(form.password.data)
+                new_user = Users(username=form.username.data, email=form.email.data, password=hashed_pw)
+                db.session.add(new_user)
+                db.session.commit()
+                flash("You've been registered successfully", "alert-success")
+                return redirect(url_for("signin"))
 
-    return render_template("signup.html", form=form)
+        return render_template("signup.html", form=form)
+    flash("You are already logged in.", "alert-primary")
+    return redirect(url_for("posts"))
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
@@ -109,6 +112,11 @@ def signin():
         return "Your credentials are invalid. Double check and try again."
     
     return render_template("signin.html", form=form)
+
+@app.route("/profile")
+@login_required
+def profile():
+    return current_user.username
 
 @app.route("/logout")
 @login_required
