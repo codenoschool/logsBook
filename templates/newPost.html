@@ -2,12 +2,25 @@
 {% block title %}
 New Log
 {% endblock %}
+{% block styles %}
+{{super()}}
+<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+{% endblock %}
 {% block content %}
-<h1>Create a new log</h1>
-<form method="post" action="{{ url_for('newPost') }}">
-	<p><label for="title">Title: </label><input id="title" name="title" type="text"></p>
-	<p><label for="content">Content: </label></p>
-	<p><textarea id="content" name="content" cols=80 rows=20></textarea></p>
-	<input type="submit" value="Save">
-</form>
+<div class="container">
+	<h2>Create a new log</h2>
+	<form method="post" action="{{ url_for('newPost') }}">
+		<div class="form-group">
+			<label for="title">Title</label>
+			<input type="text" class="form-control" id="title" name="title" placeholder="Title">
+		</div>
+		<textarea name="content" id="content" rows="10" cols="80">
+                
+		</textarea>
+		<script>
+			CKEDITOR.replace( 'content' );
+		</script><br>
+		<button type="submit" class="btn btn-primary">Save</button>
+	</form>
+</div>
 {% endblock %}
