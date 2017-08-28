@@ -28,7 +28,7 @@ def load_user(user_id):
 
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
+    title = db.Column(db.String(150))
     content = db.Column(db.Text(length=None))
     author = db.Column(db.String(50))
 

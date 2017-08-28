@@ -8,7 +8,7 @@ Logs
 {% for post in posts %}
 <div>
     <h3><a href="{{ url_for('post', id=post.id) }}">{{ post.title|safe }}</a></h3>
-    <h6>by: {{ post.author|safe }}</h6>
+    <h6>by: <a href="{{ url_for('profile', username=post.author) }}">{{ post.author|safe }}</a></h6>
 </div>
 {% endfor %}
 {% else %}
