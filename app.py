@@ -29,7 +29,7 @@ def load_user(user_id):
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
-    content = db.Column(db.String(1000))
+    content = db.Column(db.Text(length=None))
     author = db.Column(db.String(50))
 
 class Users(UserMixin, db.Model):
@@ -85,11 +85,11 @@ def signup():
             cee = bool(Users.query.filter_by(email=form.email.data).first())
             
             if ccu == True:
-                return "The username was taken by someone else. Try again with a new one."
+                flash("The username was taken by someone else. Try again with a new one.", "alert-dark")
             elif cee == True:
-                return "A user with this email already exists. Try again with a new one."
+                flash("A user with this email already exists. Try again with a new one.", "alert-warning")
             else:
-                hashed_pw = generate_password_hash(form.password.data)
+                hashed_pw = generate_password_hash(form.password.data, method="sha256")
                 new_user = Users(username=form.username.data, email=form.email.data, password=hashed_pw)
                 db.session.add(new_user)
                 db.session.commit()
@@ -97,27 +97,35 @@ def signup():
                 return redirect(url_for("signin"))
 
         return render_template("signup.html", form=form)
+
     flash("You are already logged in.", "alert-primary")
     return redirect(url_for("posts"))
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
-    form = LoginForm()
+    if not current_user.is_authenticated:
+        form = LoginForm()
 
-    if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
+        if form.validate_on_submit():
+            user = Users.query.filter_by(email=form.email.data).first()
 
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember)
-            return redirect(url_for("posts"))
-        return "Your credentials are invalid. Double check and try again."
+            if user and check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember)
+                return redirect(url_for("posts"))
+            flash("Your credentials are invalid. Double check and try again.", "alert-warning")
     
-    return render_template("signin.html", form=form)
+        return render_template("signin.html", form=form)
 
-@app.route("/profile")
-@login_required
-def profile():
-    return render_template("user_profile.html")
+    flash("You are already logged in.", "alert-primary")
+    return redirect(url_for("posts"))
+
+@app.route("/profile/<string:username>/")
+def profile(username):
+    user = Users.query.filter_by(username=username).first()
+    if user:
+        return render_template("user_profile.html", user=user)
+        
+    return render_template("page_not_found.html")
 
 @app.route("/logout")
 @login_required
@@ -127,9 +135,9 @@ def logout():
     
     return redirect(url_for("posts"))
 
-@app.errorhandler(400)
+@app.errorhandler(404)
 def page_not_found(error):
-    return render_template("page_not_found.html"), 400
+    return render_template("page_not_found.html"), 404
 
 if __name__ == "__main__":
     db.create_all()

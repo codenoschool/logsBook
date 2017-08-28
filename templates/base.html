@@ -38,7 +38,7 @@
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown01">
 						{% if current_user.username %}
-						<a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
+						<a class="dropdown-item" href="{{ url_for('profile', username=current_user.username) }}">Profile</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
 						{% else %}

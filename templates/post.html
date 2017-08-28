@@ -4,6 +4,6 @@
 {% endblock %}
 {% block content %}
 <h1>{{ post.title|safe }}</h1>
-<h4>{{ post.author|safe }}</h4>
+<h6>- Written by <a href="{{ url_for('profile', username=post.author) }}">{{ post.author|safe }}</a></h6>
 <p>{{ post.content|safe }}</p>
 {% endblock %}
