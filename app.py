@@ -75,6 +75,12 @@ def newPost():
 
     return render_template("new_post.html")
 
+@app.route("/search")
+def search():
+    posts = Posts.query.filter_by(title=request.args.get("query")).all()
+
+    return render_template("posts.html", posts=posts)
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if not current_user.is_authenticated:
