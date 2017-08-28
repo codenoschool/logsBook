@@ -14,6 +14,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "superSecret"
 app.config["SQLALCHEMY_DATABASE_URI"] = dbdir
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "signin"
@@ -22,8 +25,6 @@ login_manager.login_message_category = "alert-primary"
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(user_id)
-
-db = SQLAlchemy(app)
 
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,7 +73,7 @@ def newPost():
         flash("The log was created successfully.", "alert-success")
         return redirect(url_for("posts"))
 
-    return render_template("newPost.html")
+    return render_template("new_post.html")
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -108,7 +109,7 @@ def signin():
 
         if user and check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember)
-            return redirect(url_for("newPost"))
+            return redirect(url_for("posts"))
         return "Your credentials are invalid. Double check and try again."
     
     return render_template("signin.html", form=form)
@@ -116,7 +117,7 @@ def signin():
 @app.route("/profile")
 @login_required
 def profile():
-    return current_user.username
+    return render_template("user_profile.html")
 
 @app.route("/logout")
 @login_required
