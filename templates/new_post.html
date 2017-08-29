@@ -4,7 +4,8 @@ New Log
 {% endblock %}
 {% block styles %}
 {{super()}}
-<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script> -->
+<script src="//cdn.ckeditor.com/4.7.2/basic/ckeditor.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container">

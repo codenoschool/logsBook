@@ -37,6 +37,10 @@ class Users(UserMixin, db.Model):
     username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    name = db.Column(db.String(50))
+    description = db.Column(db.String(300))
+    contact = db.Column(db.String(50))
+    web = db.Column(db.String(50))
 
 class RegisterForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired(), Length(min=6, max=50)])
