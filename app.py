@@ -133,7 +133,8 @@ def signin():
 def profile(username):
     user = Users.query.filter_by(username=username).first()
     if user:
-        return render_template("user_profile.html", user=user)
+        posts = Posts.query.filter_by(author=username).limit(10).all()
+        return render_template("user_profile.html", user=user, posts=posts)
         
     return render_template("page_not_found.html")
 
