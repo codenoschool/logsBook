@@ -41,7 +41,7 @@ class Posts(Base):
     title = db.Column(db.String(150))
     content = db.Column(db.Text(length=None))
     author = db.Column(db.String(50))
-    status = db.Column(db.SmallInteger, nullable=False)
+    status = db.Column(db.SmallInteger, nullable=False, default=1)
 
     def __init__(self, title, content, author):
         self.title = title
@@ -62,13 +62,11 @@ class Users(UserMixin, Base):
     description = db.Column(db.String(300))
     contact = db.Column(db.String(50))
     web = db.Column(db.String(50))
+    role = db.Column(db.SmallInteger, nullable=False, default=1)
+    status = db.Column(db.SmallInteger, nullable=False, default=1)
 
-    role = db.Column(db.SmallInteger, nullable=False)
-    status = db.Column(db.SmallInteger, nullable=False)
-
-    def __init__(self, username, name, email, password):
+    def __init__(self, username, email, password):
         self.username = username
-        self.name = name
         self.email = email
         self.password = password
     
