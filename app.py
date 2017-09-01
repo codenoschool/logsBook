@@ -7,6 +7,7 @@ from flask_login import UserMixin, LoginManager, login_required, login_user, cur
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
+import hashlib, urllib.parse
 
 dbdir = "sqlite:///" + os.path.abspath(os.getcwd()) + "/database.db"
 
@@ -134,7 +135,12 @@ def profile(username):
     user = Users.query.filter_by(username=username).first()
     if user:
         posts = Posts.query.filter_by(author=username).limit(10).all()
-        return render_template("user_profile.html", user=user, posts=posts)
+        email = user.email.encode("utf-8")
+        default = "http://kappaincor.16mb.com/img/carita.png"
+        size = 400
+        gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.parse.urlencode({'d':default, 's':str(size)})
+        return render_template("user_profile.html", user=user, posts=posts, gravatar_url=gravatar_url)
         
     return render_template("page_not_found.html")
 
