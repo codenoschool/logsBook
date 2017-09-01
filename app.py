@@ -27,21 +27,53 @@ login_manager.login_message_category = "alert-primary"
 def load_user(user_id):
     return Users.query.get(user_id)
 
-class Posts(db.Model):
+class Base(db.Model):
+    __abstract__ = True
+
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+class Posts(Base):
+
+    # Based on Base Class
+
     title = db.Column(db.String(150))
     content = db.Column(db.Text(length=None))
     author = db.Column(db.String(50))
+    status = db.Column(db.SmallInteger, nullable=False)
 
-class Users(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
+    def __init__(self, title, content, author):
+        self.title = title
+        self.content = content
+        self.author = author
+
+    def __repr__(self):
+        return "<Log %r>" % (self.title)
+
+class Users(UserMixin, Base):
+
+    # Based on Base Class.
+
+    username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     name = db.Column(db.String(50))
     description = db.Column(db.String(300))
     contact = db.Column(db.String(50))
     web = db.Column(db.String(50))
+
+    role = db.Column(db.SmallInteger, nullable=False)
+    status = db.Column(db.SmallInteger, nullable=False)
+
+    def __init__(self, username, name, email, password):
+        self.username = username
+        self.name = name
+        self.email = email
+        self.password = password
+    
+    def __repr__(self):
+        return "<User %r>" % (self.email)
 
 class RegisterForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired(), Length(min=6, max=50)])
@@ -92,10 +124,12 @@ def signup():
         form = RegisterForm()
 
         if form.validate_on_submit():
-            ccu = bool(Users.query.filter_by(username=form.username.data).first())
+            # ceu = Check Existent User
+            # cee = Check Existent Email
+            ceu = bool(Users.query.filter_by(username=form.username.data).first())
             cee = bool(Users.query.filter_by(email=form.email.data).first())
             
-            if ccu == True:
+            if ceu == True:
                 flash("The username was taken by someone else. Try again with a new one.", "alert-dark")
             elif cee == True:
                 flash("A user with this email already exists. Try again with a new one.", "alert-warning")
