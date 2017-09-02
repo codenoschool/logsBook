@@ -12,19 +12,19 @@ Edit Profile
             <div class="form-group">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input name="name" value="{{ user.name }}" type="text" class="form-control" id="name" placeholder="Name">
+                    <input name="name" {% if user.contact %} value="{{ user.name }}" {% endif %} type="text" class="form-control" id="name" placeholder="Name">
                 </div>
                 <div class="form-group">
                     <label for="contact">Public Email</label>
-                    <input name="contact" value="{{ user.contact }}" type="email" class="form-control" id="contact" placeholder="Public Email">
+                    <input name="contact" {% if user.contact %} value="{{ user.contact }}" {% endif %} type="email" class="form-control" id="contact" placeholder="Public Email">
                 </div>
                 <div class="form-group">
                     <label for="description">Bio</label>
-                    <textarea name="description" class="form-control" id="description" rows="3" placeholder="Tell us a little bit of yourself.">{{ user.description }}</textarea>
+                    <textarea name="description" class="form-control" id="description" rows="3" placeholder="Tell us a little bit of yourself.">{% if user.contact %}{{ user.description }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="web">URL</label>
-                    <input name="web" type="text" value="{{ user.web }}" class="form-control" id="web" placeholder="URL">
+                    <input name="web" type="text" {% if user.contact %} value="{{ user.web }}" {% endif %} class="form-control" id="web" placeholder="URL">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -34,7 +34,7 @@ Edit Profile
                 <img class="card-img-top" src="{{ gravatar_url }}" alt="Profile Picture">
                 <div class="form-group">
                     <label for="profile_url">URL</label>
-                    <input name="profile_url" value="{{ user.profile_url }}" type="text" class="form-control" id="profile_url" placeholder="Enter a URL of your image.">
+                    <input name="profile_url" {% if user.contact %} value="{{ user.profile_url }}" {% endif %} type="text" class="form-control" id="profile_url" placeholder="Enter a URL of your image.">
                 </div>
             </div>
         </div>
