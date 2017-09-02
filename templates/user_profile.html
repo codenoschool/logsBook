@@ -36,7 +36,7 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8" style="margin-bottom: 20px;">
         {% if posts %}
         <h1>Logs</h1>
-        {% for post in posts %}
+        {% for post in posts[::-1] %}
         <h4><a href="{{ url_for('post', id=post.id) }}">{{ post.title }}</a></h4>
         {% endfor %}
         {% else %}

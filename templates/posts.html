@@ -5,7 +5,7 @@ Logs
 {% block content %}
 <h1>Logs</h1>
 {% if posts %}
-{% for post in posts %}
+{% for post in posts[::-1] %}
 <div>
     <h3><a href="{{ url_for('post', id=post.id) }}">{{ post.title|safe }}</a></h3>
     <h6>by: <a href="{{ url_for('profile', username=post.author) }}">{{ post.author|safe }}</a></h6>

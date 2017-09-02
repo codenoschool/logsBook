@@ -89,7 +89,7 @@ class LoginForm(FlaskForm):
 
 @app.route("/")
 def posts():
-    posts = Posts.query.all()
+    posts = Posts.query.order_by(Posts.date_modified).limit(100).all()
 
     return render_template("posts.html", posts=posts)
 
@@ -111,6 +111,24 @@ def newPost():
         return redirect(url_for("posts"))
 
     return render_template("new_post.html")
+
+@app.route("/edit/log/<int:log_id>/", methods=["GET", "POST"])
+@login_required
+def edit_log(log_id):
+    log = Posts.query.filter_by(id=log_id).first()
+
+    if log.author == current_user.username:
+        if request.method == "POST":
+            log.title = request.form["title"]
+            log.content = request.form["content"]
+            db.session.commit()
+            flash("The log has been updated successfully.", "alert-success")
+            return redirect(url_for("post", id=log.id))
+
+        return render_template("edit_log.html", log=log)
+
+    flash("You are not the author of that log.", "alert-danger")
+    return redirect(url_for("posts"))
 
 @app.route("/search")
 def search():
@@ -196,7 +214,7 @@ def settings_profile():
 def profile(username):
     user = Users.query.filter_by(username=username).first()
     if user:
-        posts = Posts.query.filter_by(author=username).limit(10).all()
+        posts = Posts.query.filter_by(author=username).order_by(Posts.date_modified).limit(10).all()
         email = user.email.encode("utf-8")
         if user.profile_url:
             image = user.profile_url

@@ -5,5 +5,8 @@
 {% block content %}
 <h1>{{ post.title|safe }}</h1>
 <h6>- Written by <a href="{{ url_for('profile', username=post.author) }}">{{ post.author|safe }}</a></h6>
+{% if post.author == current_user.username %}
+<a href="{{ url_for('edit_log', log_id=post.id)}}">Edit Log</a>
+{% endif %}
 <p>{{ post.content|safe }}</p>
 {% endblock %}
