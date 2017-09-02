@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "_render_elements.html" import render_field %}
+{% block title %}
+Edit Profile
+{% endblock %}
+{% block content %}
+<div class="container">
+	<h2>Public Profile</h2>
+	<form method="post" action="{{ url_for('settings_profile') }}">
+        <div class="row">
+            <div class="col-md-8">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="contact">Public Email</label>
+                    <input type="email" class="form-control" id="contact" placeholder="Public Email">
+                </div>
+                <div class="form-group">
+                    <label for="description">Bio</label>
+                    <textarea class="form-control" id="description" rows="3" placeholder="Tell us a little bit of yourself."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="web">URL</label>
+                    <input type="text" class="form-control" id="web" placeholder="URL">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+            </div>
+            <div class="col-md-4">
+                <h6>Profile Picture</h6>
+                <img class="card-img-top" src="{{ gravatar_url }}" alt="Profile Picture">
+                <div class="form-group">
+                    <label for="profile_url">URL</label>
+                    <input type="text" class="form-control" id="profile_url" placeholder="Enter a URL of your image.">
+                </div>
+            </div>
+        </div>
+	</form>
+</div>
+{% endblock %}

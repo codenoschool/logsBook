@@ -40,6 +40,7 @@
 						{% if current_user.username %}
 						<a class="dropdown-item" href="{{ url_for('profile', username=current_user.username) }}">Profile</a>
 						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{{ url_for('settings_profile') }}">Settings</a>
 						<a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
 						{% else %}
 						<a class="dropdown-item" href="{{ url_for('signin') }}">Sign In</a>
