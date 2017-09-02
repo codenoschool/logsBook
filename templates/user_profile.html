@@ -12,19 +12,19 @@
                     {% if user.name %}
                     <h1>{{ user.name }}</h1>
                     {% endif %}
-                    <h2>{{ user.username }}</h2>
+                    <h5><a href="{{ url_for('profile', username=user.username) }}">@{{ user.username }}</a></h5>
                     {% if user.description %}
                     <p>{{ user.description }}</p>
                     {% else %}
                     <p>No description.</p>
                     {% endif %}
                     {% if user.contact %}
-                    <p>{{ user.contact }}</p>
+                    <p><a href="mailto:{{ user.contact }}">{{ user.contact }}</a></p>
                     {% else %}
                     <p>No contact.</p>
                     {% endif %}
                     {% if user.web %}
-                    <p>{{ user.web }}</p>
+                    <p><a href="{{ user.web }}">{{ user.web }}</a></p>
                     {% else %}
                     <p>No more information available.</p>
                     {% endif %}

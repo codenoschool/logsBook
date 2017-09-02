@@ -63,7 +63,7 @@ class Users(UserMixin, Base):
     description = db.Column(db.String(300))
     contact = db.Column(db.String(50))
     web = db.Column(db.String(50))
-    profile_url = db.Column(db.String(50))
+    profile_url = db.Column(db.String(100))
     role = db.Column(db.SmallInteger, nullable=False, default=1)
     status = db.Column(db.SmallInteger, nullable=False, default=1)
 
@@ -168,6 +168,17 @@ def signin():
 @login_required
 def settings_profile():
     user = Users.query.filter_by(username=current_user.username).first()
+
+    if request.method == "POST":
+        user.name = request.form["name"]
+        user.description = request.form["description"]
+        user.contact = request.form["contact"]
+        user.web = request.form["web"]
+        user.profile_url = request.form["profile_url"]
+        db.session.commit()
+        flash("You've updated your profile successfully.", "alert-success")
+        return redirect(url_for("profile", username=current_user.username))
+
     if user:
         email = user.email.encode("utf-8")
         if user.profile_url:
@@ -187,10 +198,13 @@ def profile(username):
     if user:
         posts = Posts.query.filter_by(author=username).limit(10).all()
         email = user.email.encode("utf-8")
-        default = "http://kappaincor.16mb.com/img/carita.png"
+        if user.profile_url:
+            image = user.profile_url
+        else:
+            image = "http://kappaincor.16mb.com/img/carita.png"
         size = 400
         gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.parse.urlencode({'d':default, 's':str(size)})
+        gravatar_url += urllib.parse.urlencode({'d':image, 's':str(size)})
         return render_template("user_profile.html", user=user, posts=posts, gravatar_url=gravatar_url)
         
     return render_template("page_not_found.html")
